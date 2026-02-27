@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Load dataset
-df = pd.read_csv("model_training_dataset.csv")
+df = pd.read_csv("Data/Processed/model_training_dataset.csv")
 
 result_counts = df["result"].value_counts().sort_index()
 

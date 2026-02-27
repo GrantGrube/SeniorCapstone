@@ -6,19 +6,10 @@ import warnings
 
 warnings.filterwarnings('ignore')
 
-# Get root directory of this script
-BASE_DIR = Path(__file__).resolve().parent
-
-# Build file paths
-result_path = BASE_DIR / "Data" / "International Football Results from 1872 - 2026" / "results.csv"
-goalscorers_path = BASE_DIR / "Data" / "International Football Results from 1872 - 2026" / "goalscorers.csv"
-shootouts_path = BASE_DIR / "Data" / "International Football Results from 1872 - 2026" / "shootouts.csv"
-
-
 # Load dataset
-results = pd.read_csv(result_path)
-goalscorers = pd.read_csv(goalscorers_path)
-shootouts = pd.read_csv(shootouts_path)
+results = pd.read_csv("Data/International Football Results from 1872 - 2026/results.csv")
+goalscorers = pd.read_csv("Data/International Football Results from 1872 - 2026/goalscorers.csv")
+shootouts = pd.read_csv("Data/International Football Results from 1872 - 2026/shootouts.csv")
 
 # Perform basic cleaning on the data
 
@@ -91,8 +82,8 @@ formatted_df["went_to_shootout"] = formatted_df["shootout_winner"].notna().astyp
 
 
 # Save clean version
-output_path = BASE_DIR / "full_merged_dataset.csv"
-formatted_df.to_csv(output_path, index=False)
+# output_path = BASE_DIR / "full_merged_dataset.csv"
+# formatted_df.to_csv(output_path, index=False)
 
 print("Dataset formatted successfully.")
 print("Final dataset shape:", formatted_df.shape)

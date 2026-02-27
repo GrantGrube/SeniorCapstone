@@ -1,13 +1,10 @@
 import pandas as pd
-from pathlib import Path
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
 # Load dataset
-BASE_DIR = Path(__file__).resolve().parent
-data_path = BASE_DIR / "model_training_dataset.csv"
 
-df = pd.read_csv(data_path)
+df = pd.read_csv("Data/Processed/model_training_dataset.csv")
 
 # Ensure date is datetime
 df["date"] = pd.to_datetime(df["date"])
@@ -45,7 +42,6 @@ model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
 
 # Evaluate Model's prediction accuracy
-
 accuracy = accuracy_score(y_test, y_pred)
 
 print("\nAccuracy on 2022 World Cup:", round(accuracy, 4))

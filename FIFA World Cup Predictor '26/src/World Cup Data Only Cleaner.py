@@ -1,24 +1,12 @@
 import pandas as pd
-import matplotlib.pyplot as plt
-from pathlib import Path
 import warnings
 
 warnings.filterwarnings('ignore')
 
-# Get root directory of this script
-BASE_DIR = Path(__file__).resolve().parent
-
-# Build file paths
-result_path = BASE_DIR / "Data" / "International Football Results from 1872 - 2026" / "results.csv"
-goalscorers_path = BASE_DIR / "Data" / "International Football Results from 1872 - 2026" / "goalscorers.csv"
-shootouts_path = BASE_DIR / "Data" / "International Football Results from 1872 - 2026" / "shootouts.csv"
-
-
 # Load dataset
-results = pd.read_csv(result_path)
-goalscorers = pd.read_csv(goalscorers_path)
-shootouts = pd.read_csv(shootouts_path)
-
+results = pd.read_csv("Data/International Football Results from 1872 - 2026/results.csv")
+goalscorers = pd.read_csv("Data/International Football Results from 1872 - 2026/goalscorers.csv")
+shootouts = pd.read_csv("Data/International Football Results from 1872 - 2026/shootouts.csv")
 # Perform basic cleaning on the data
 
 # Ensure that there is a proper date format
@@ -132,4 +120,4 @@ print("\nDataset Info:")
 formatted_df.info()
 
 print("\nSample rows:")
-print(formatted_df.sample(10))
+print(formatted_df.sample(20))

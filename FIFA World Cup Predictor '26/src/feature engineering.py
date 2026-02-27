@@ -2,7 +2,7 @@ import pandas as pd
 from collections import defaultdict
 
 # Load dataset
-df = pd.read_csv("world_cup_only_dataset.csv")
+df = pd.read_csv("Data/Processed/world_cup_only_dataset.csv")
 
 # Ensure that there is a proper date format
 df["date"] = pd.to_datetime(df["date"])
