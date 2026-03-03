@@ -1,7 +1,4 @@
 import pandas as pd
-import numpy as np
-import os
-from pathlib import Path
 import warnings
 
 warnings.filterwarnings('ignore')
@@ -29,11 +26,11 @@ results = results.dropna(subset=["home_score", "away_score"])
 # Creating a target variable
 def get_result(row):
     if row["home_score"] > row["away_score"]:
-        return 2  # Home Win
+        return "Home Win"  # Home Win
     elif row["home_score"] < row["away_score"]:
-        return 0  # Away Win
+        return "Away Win"  # Away Win
     else:
-        return 1  # Draw
+        return "Draw"  # Draw
 
 
 results["result"] = results.apply(get_result, axis=1)
@@ -60,7 +57,7 @@ goal_summary = goalscorers.groupby(
 
 formatted_df = formatted_df.merge(
     goal_summary,
-    on=["date", "home_team","away_team"],
+    on=["date", "home_team", "away_team"],
     how="left"
 )
 
@@ -72,6 +69,7 @@ formatted_df = formatted_df.merge(
     on=["date", "home_team", "away_team"],
     how="left"
 )
+
 
 # Rename winner column if present
 if "winner" in formatted_df.columns:

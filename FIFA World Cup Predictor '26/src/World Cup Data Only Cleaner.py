@@ -30,11 +30,11 @@ print("Total World Cup matches:", len(results))
 # Creating a target variable
 def get_result(row):
     if row["home_score"] > row["away_score"]:
-        return 2  # Home Win
+        return "Home Win"  # Home Win
     elif row["home_score"] < row["away_score"]:
-        return 0  # Away Win
+        return "Home Win"  # Away Win
     else:
-        return 1  # Draw
+        return "Draw"  # Draw
 
 
 results["result"] = results.apply(get_result, axis=1)
