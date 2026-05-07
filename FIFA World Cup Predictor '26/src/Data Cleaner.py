@@ -8,6 +8,7 @@ results = pd.read_csv("Data/International Football Results from 1872 - 2026/resu
 goalscorers = pd.read_csv("Data/International Football Results from 1872 - 2026/goalscorers.csv")
 shootouts = pd.read_csv("Data/International Football Results from 1872 - 2026/shootouts.csv")
 
+
 # Perform basic cleaning on the data
 
 # Convert date to datetime
@@ -36,7 +37,6 @@ def get_result(row):
 results["result"] = results.apply(get_result, axis=1)
 
 # Select specific columns that we need
-
 formatted_df = results[[
     "date",
     "home_team",
@@ -80,8 +80,8 @@ formatted_df["went_to_shootout"] = formatted_df["shootout_winner"].notna().astyp
 
 
 # Save clean version
-# output_path = BASE_DIR / "full_merged_dataset.csv"
-# formatted_df.to_csv(output_path, index=False)
+output_path = "full_merged_dataset.csv"
+formatted_df.to_csv(output_path, index=False)
 
 print("Dataset formatted successfully.")
 print("Final dataset shape:", formatted_df.shape)

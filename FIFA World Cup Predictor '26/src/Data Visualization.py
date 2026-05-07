@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-df = pd.read_csv("Data/Processed/model_training_dataset.csv")
+df = pd.read_csv("FIFA World Cup Predictor '26/Data/Processed/model_training_dataset.csv")
 
 # Create win columns
 df["home_win"] = df["home_score"] > df["away_score"]

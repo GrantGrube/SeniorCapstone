@@ -2,18 +2,53 @@ import pandas as pd
 from collections import defaultdict
 
 # Load dataset
-df = pd.read_csv("Data/Processed/world_cup_only_dataset.csv")
+df = pd.read_csv("FIFA World Cup Predictor '26/Data/Processed/full_merged_dataset2.csv")
 
-# Ensure that there is a proper date format
+# Ensure proper date format
 df["date"] = pd.to_datetime(df["date"])
 
-# Sort dates chronologically
+# Sort chronologically
 df = df.sort_values("date").reset_index(drop=True)
 
-# Extract the year from the dataset
+# Extract year
 df["year"] = df["date"].dt.year
 
-# Dictionary to track team stats
+# Stage Feature
+
+# Match order within each World Cup
+df["match_number"] = df.groupby("year").cumcount() + 1
+
+
+def assign_stage_simple(row):
+    year = row["year"]
+    m = row["match_number"]
+
+    # Modern World Cups (1998–2022): 64 matches
+    if year >= 1998:
+        return "Group Stage" if m <= 48 else "Knockout"
+
+    # 1986–1994: 52 matches total
+    elif year >= 1986:
+        return "Group Stage" if m <= 36 else "Knockout"
+
+    # 1954–1982
+    elif year >= 1954:
+        return "Group Stage" if m <= 24 else "Knockout"
+
+    # 1930–1950
+    else:
+        return "Knockout" if m > 12 else "Group Stage"
+
+
+df["stage"] = df.apply(assign_stage_simple, axis=1)
+
+# Binary knockout indicator
+df["is_knockout"] = (df["stage"] == "Knockout").astype(int)
+
+# one-hot encoding for XGBoost
+df = pd.get_dummies(df, columns=["stage"])
+
+# Feature Engineering
 team_stats = defaultdict(lambda: {
     "matches": 0,
     "goals_scored": 0,
@@ -21,7 +56,6 @@ team_stats = defaultdict(lambda: {
     "wins": 0
 })
 
-# Lists to store new features
 home_avg_scored = []
 home_avg_conceded = []
 away_avg_scored = []
@@ -31,7 +65,6 @@ away_win_rate = []
 home_goal_diff_avg = []
 away_goal_diff_avg = []
 
-# Lists to store cumulative features
 home_cum_wins = []
 away_cum_wins = []
 home_cum_matches = []
@@ -40,7 +73,7 @@ home_cum_goal_diff = []
 away_cum_goal_diff = []
 
 # Loop through matches in order
-for index, row in df.iterrows():
+for _, row in df.iterrows():
 
     home = row["home_team"]
     away = row["away_team"]
@@ -51,7 +84,7 @@ for index, row in df.iterrows():
     home_matches = home_stats["matches"]
     away_matches = away_stats["matches"]
 
-    # Cumulative raw stats
+    # Cumulative stats (before update)
     home_cum_wins.append(home_stats["wins"])
     away_cum_wins.append(away_stats["wins"])
 
@@ -65,7 +98,7 @@ for index, row in df.iterrows():
         away_stats["goals_scored"] - away_stats["goals_conceded"]
     )
 
-    # Compute rolling averages before updating
+    # Rolling averages
     if home_matches > 0:
         home_avg_scored.append(home_stats["goals_scored"] / home_matches)
         home_avg_conceded.append(home_stats["goals_conceded"] / home_matches)
@@ -92,7 +125,7 @@ for index, row in df.iterrows():
         away_win_rate.append(0)
         away_goal_diff_avg.append(0)
 
-    # Update stats after computing stats
+    # Update stats AFTER computing features
     home_stats["matches"] += 1
     home_stats["goals_scored"] += row["home_score"]
     home_stats["goals_conceded"] += row["away_score"]
@@ -107,7 +140,8 @@ for index, row in df.iterrows():
         away_stats["wins"] += 1
 
 
-# Add our features to the dataset
+# Add features to dataframe
+
 df["home_avg_scored"] = home_avg_scored
 df["home_avg_conceded"] = home_avg_conceded
 df["away_avg_scored"] = away_avg_scored
@@ -125,21 +159,22 @@ df["away_cum_goal_diff"] = away_cum_goal_diff
 df["home_advantage"] = (df["neutral"] == False).astype(int)
 
 
-# Create target variable
+# Target Variable
 def match_result(row):
     if row["home_score"] > row["away_score"]:
-        return "Home Win"  # Home Win
+        return "Home Win"
     elif row["home_score"] < row["away_score"]:
-        return "Away Win"  # Away Win
+        return "Away Win"
     else:
-        return "Draw"  # Draw
+        return "Draw"
+
 
 df["result"] = df.apply(match_result, axis=1)
-
-# Save a new version with averages
-df.to_csv("Data/Processed/model_training_dataset.csv", index=False)
-
-df["result"] = df.apply(match_result, axis=1)
+# Save Dataset
+df.to_csv(
+    "FIFA World Cup Predictor '26/Data/Processed/training_dataset2.csv",
+    index=False
+)
 
 print("Dataset Info:")
 df.info()
