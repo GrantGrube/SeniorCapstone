@@ -3,7 +3,8 @@ import json
 from openpyxl import workbook
 from openpyxl import load_workbook
 
-book = load_workbook(filename="Capstone Sheet.xlsx") #loading the sheet we want to use
+
+book = load_workbook(filename=r"C:\Users\Grant\Desktop\Capstone\CapstoneSheet.xlsx") 
 
 print(book.sheetnames)
 sheetn = input("Please enter the name of the sheet you would like to use: ")
@@ -25,7 +26,7 @@ for row in current.iter_rows():
         })
 
 #exporting directly to Unity Asset file 
-output_path = r"\Users\Grant\Desktop\Capstone\UnityCapstone\Assets\StreamingAssets/excel_data.json"
+output_path = r"C:\Users\Grant\Desktop\Capstone\UnityCapstone\Assets\StreamingAssets\excel_data.json"
 with open(output_path, "w") as f:
     json.dump(cell_data, f, indent=4)
 
