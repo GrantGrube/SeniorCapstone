@@ -5,6 +5,7 @@ from io import StringIO
 url = "https://www.eloratings.net/World.tsv?_=1774309604123"
 response = requests.get(url)
 
+
 tsv_data = StringIO(response.text)
 reader = csv.reader(tsv_data, delimiter="\t")
 
